@@ -26,6 +26,7 @@ extern char trampoline[]; // trampoline.S
 // must be acquired before any p->lock.
 struct spinlock wait_lock;
 
+
 // Allocate a page for each process's kernel stack.
 // Map it high in memory, followed by an invalid
 // guard page.
@@ -119,6 +120,11 @@ allocproc(void)
       release(&p->lock);
     }
   }
+
+  p->alarm_interval = 0;
+  p->tick_left = 0;
+  p->alarm_on = 0;
+  p->alarm_handler = 0;
   return 0;
 
 found:
@@ -131,6 +137,13 @@ found:
     release(&p->lock);
     return 0;
   }
+  if((p->backup = (struct trapframe *)kalloc()) == 0){
+    kfree(p->trapframe);
+    freeproc(p);
+    release(&p->lock);
+    return 0;
+  }
+  p->trapframe->sp = TRAPFRAME + PGSIZE;
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);

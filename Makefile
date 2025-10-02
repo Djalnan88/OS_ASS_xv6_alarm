@@ -38,6 +38,7 @@ OBJS_KCSAN = \
   $K/printf.o \
   $K/uart.o \
   $K/spinlock.o
+  
 
 ifdef KCSAN
 OBJS_KCSAN += \
@@ -194,6 +195,7 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+	$U/_alarmtest\
 
 
 
