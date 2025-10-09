@@ -93,6 +93,7 @@ usertrap(void)
       }
     }
     clockintr();
+    yield();
   }
   usertrapret();
 }
